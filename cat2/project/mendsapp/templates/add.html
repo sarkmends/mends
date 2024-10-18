@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category and Image</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+            padding: 20px;
+        }
+        h1 {
+            color: #343a40; /* Dark gray text */
+            margin-bottom: 20px;
+        }
+        .form-section {
+            background-color: #ffffff; /* White background for forms */
+            border: 1px solid #dee2e6; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 20px;
+            margin-bottom: 20px; /* Space between sections */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+        }
+        .divider {
+            border-top: 2px solid #007bff; /* Blue divider */
+            margin: 20px 0;
+        }
+        input[type="submit"] {
+            background-color: #007bff; /* Bootstrap primary color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .nav-link {
+            margin-top: 10px; /* Space above links */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1>Add Category</h1>
+            <div class="divider"></div>
+            <form action="{% url 'add_category' %}" method="post">
+                {% csrf_token %}
+                {{ categoryForm.as_p }}
+                <input type="submit" value="Add Category" class="btn btn-primary">
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h1>Add Image</h1>
+            <div class="divider"></div>
+            <form action="{% url 'add_image' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ imageForm.as_p }}<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Image Viewer</title>
+                    <!-- Bootstrap CSS -->
+                    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+                    <link rel="stylesheet" href="styles.css">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                        }
+                
+                        /* Category Navigation Styles */
+                        .category-nav {
+                            background-color: #007bff;
+                            padding: 15px;
+                        }
+                
+                        .category-nav ul {
+                            list-style: none;
+                            padding: 0;
+                            margin: 0;
+                            display: flex;
+                            justify-content: center;
+                        }
+                
+                        .category-nav ul li {
+                            margin: 0 15px;
+                        }
+                
+                        .category-nav a {
+                            color: white;
+                            font-weight: bold;
+                            text-decoration: none;
+                        }
+                
+                        .category-nav a:hover {
+                            text-decoration: underline;
+                        }
+                
+                        .search-container {
+                            display: flex;
+                            justify-content: center;
+                            margin: 20px 0;
+                        }
+                
+                        .search-input {
+                            padding: 10px;
+                            width: 300px;
+                            border-radius: 5px;
+                        }
+                
+                        .search-btn {
+                            margin-left: 10px;
+                            padding: 10px 20px;
+                            background-color: #007bff;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                
+                        .search-btn:hover {
+                            background-color: #0056b3;
+                        }
+                
+                        /* Slider styles */
+                        .slider {
+                            position: relative;
+                            width: 100%;
+                            overflow: hidden;
+                            margin: 20px auto;
+                            max-width: 900px;
+                        }
+                
+                        .slides {
+                            display: flex;
+                            transition: transform 0.5s ease;
+                        }
+                
+                        .slide {
+                            min-width: 100%;
+                        }
+                
+                        .slide img {
+                            width: 100%;
+                            height: auto;
+                        }
+                
+                        input[type="radio"] {
+                            display: none;
+                        }
+                
+                        .navigation {
+                            position: absolute;
+                            bottom: 10px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                        }
+                
+                        .nav-button {
+                            cursor: pointer;
+                            background: rgba(255, 255, 255, 0.5);
+                            width: 15px;
+                            height: 15px;
+                            border-radius: 50%;
+                            display: inline-block;
+                            margin: 0 5px;
+                        }
+                
+                        /* Image gallery */
+                        .image-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 10px;
+                            justify-content: center;
+                            margin: 20px;
+                        }
+                
+                        .gallery-img {
+                            width: 25%;
+                            height: 200px;
+                            object-fit: cover;
+                            margin-bottom: 20px;
+                        }
+                
+                        .view-btn {
+                            background-color: rgba(0, 0, 0, 0.7);
+                            color: white;
+                            padding: 10px 20px;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            position: absolute;
+                            bottom: 10px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            display: block;
+                        }
+                
+                        .view-btn:hover {
+                            background-color: rgba(0, 0, 0, 0.9);
+                        }
+                
+                        /* Lightbox styles */
+                        .lightbox {
+                            display: none;
+                            position: fixed;
+                            z-index: 1000;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.9);
+                            justify-content: center;
+                            align-items: center;
+                        }
+                
+                        .lightbox:target {
+                            display: flex;
+                        }
+                
+                        .lightbox-content img {
+                            width: 100%;
+                            max-width: 900px;
+                            height: auto;
+                        }
+                
+                        .close {
+                            position: absolute;
+                            top: 20px;
+                            right: 35px;
+                            color: white;
+                            font-size: 40px;
+                            font-weight: bold;
+                            text-decoration: none;
+                        }
+                
+                        .close:hover {
+                            color: #bbb;
+                        }
+                    </style>
+                </head>
+                <body>
+                
+                    <!-- Category Navigation -->
+                    <nav class="category-nav">
+                        <ul>
+                            {% if dbCategorys %}
+                                {% for x in dbCategorys %}
+                                    <li><a href="#">{{ x.name }}</a></li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No categories found</li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    
+                
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <input type="text" placeholder="Search images..." class="search-input">
+                        <button class="search-btn">Search</button>
+                    </div>
+                
+                    <!-- Image Slider -->
+                    <div class="slider">
+                        <input type="radio" name="slider" id="slide1" checked>
+                        <input type="radio" name="slider" id="slide2">
+                        <input type="radio" name="slider" id="slide3">
+                        <input type="radio" name="slider" id="slide4">
+                        
+                        <div class="slides">
+                            {% if dbImages %}
+                                {% for x in dbImages %}
+                                    <div class="slide">
+                                        <img src="{{ x.file.url }}" alt="Image {{ x.id }}">
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No images available.</p>
+                            {% endif %}
+                        </div>
+                
+                        <div class="navigation">
+                            <label for="slide1" class="nav-button"></label>
+                            <label for="slide2" class="nav-button"></label>
+                            <label for="slide3" class="nav-button"></label>
+                            <label for="slide4" class="nav-button"></label>
+                        </div>
+                    </div>
+                
+                    <!-- Image Gallery -->
+                    <div class="image-container">
+                        {% if dbImages %}
+                            {% for x in dbImages %}
+                                <a href="#img{{ x.id }}">
+                                    <img src="{{ x.file.url }}" alt="{{ x.category }}" class="gallery-img">
+                                </a>
+                                <a href="~image" class="view-btn">View Image</a>
+                            {% endfor %}
+                        {% else %}
+                            <p>No images available.</p>
+                        {% endif %}
+                    </div>
+                
+                    <!-- Lightbox Views -->
+                    <div class="lightbox" id="img1">
+                        <div class="lightbox-content">
+                            <img src="aloy-horizon-zero-dawn-3840x2160-11803.jpeg" alt="Image 1">
+                            <a href="#" class="close">&times;</a>
+                        </div>
+                    </div>
+                
+                    <!-- Bootstrap JS and dependencies -->
+                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                
+                </body>
+                </html>
+                
+                <input type="submit" value="Add Image" class="btn btn-primary">
+            </form>
+            <p class="nav-link"><a href="{% url 'view' %}" class="btn btn-secondary">View Categories & Images</a></p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional, for interactive components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} - Images</title> <!-- More descriptive title -->
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+            font-family: Arial, sans-serif;
+            padding: 20px; /* Add padding for the body */
+        }
+        h1 {
+            color: #333; /* Dark text for the header */
+            margin-bottom: 20px; /* Space below the header */
+        }
+        .divider {
+            border-top: 2px solid #007bff; /* Blue divider */
+            margin: 20px 0; /* Space around the divider */
+        }
+        .image-container {
+            margin-top: 20px; /* Space above the image grid */
+            padding: 20px; /* Add padding for the grid */
+            background-color: #ffffff; /* White background for the grid */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+        }
+        img {
+            max-width: 100%; /* Responsive images */
+            height: auto;
+            border-radius: 5px; /* Rounded corners for images */
+        }
+        .navigation {
+            margin-top: 20px; /* Space above navigation links */
+        }
+        .nav-link {
+            margin-right: 15px; /* Space between links */
+        }
+        .search-container {
+            margin-top: 20px; /* Space above search */
+        }
+        .download-btn {
+            position: relative; /* Position relative for better alignment */
+            bottom: 10px; /* Positioning */
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+            color: white; /* White text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            text-decoration: none; /* Remove underline from link */
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+        .download-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9); /* Darker on hover */
+        }
+        .view-btn {
+            position: relative; /* Position relative for better alignment */
+            bottom: 10px; /* Positioning */
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue background for view button */
+            color: white; /* White text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            text-decoration: none; /* Remove underline from link */
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+        .view-btn:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Images in "{{ category.name }}"</h1> <!-- Centering the category name -->
+        <div class="divider"></div> <!-- Divider line -->
+
+        <!-- Search Form -->
+        <div class="search-container text-center">
+            <form action="#" method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query" placeholder="Search images..." aria-label="Search images">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="image-container">
+            <div class="row"> <!-- Bootstrap row for the grid -->
+                {% if image %}
+                    {% for data in image %}
+                        <div class="col-md-4 mb-4"> <!-- Each image takes up 4 columns on medium screens -->
+                            <img src="{{ data.file.url }}" alt="{{ data.name }}" class="img-fluid"> <!-- Use img-fluid for responsive images -->
+                            <div class="text-center mt-2">
+                                <button class="view-btn" data-toggle="modal" data-target="#imageModal" data-image="{{ data.file.url }}">View</button> <!-- View button triggers modal -->
+                                <a href="{% url 'download_image' data.id %}" class="download-btn">Download</a> <!-- Added download button -->
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">No Files Found</div> <!-- Centered message -->
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="navigation text-center"> <!-- Center the navigation buttons -->
+            
+            <a href="{% url 'view' %}" class="btn btn-secondary">Home</a>
+        </div>
+    </div>
+
+    <!-- Modal for viewing image -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="" id="modalImage" alt="Image Preview" class="img-fluid"> <!-- Placeholder for image -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies (optional, for interactive components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to handle the modal image display
+        $('#imageModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var imageUrl = button.data('image'); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('#modalImage').attr('src', imageUrl); // Set the image source
+        });
+    </script>
+</body>
+</html>
